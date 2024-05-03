@@ -1,13 +1,17 @@
-<p align="center" width="100%">
+
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="./view/static/assets/logo-white.svg">
-  <img width="256px" src="./view/static/assets/logo-black.svg">
+  <img width="210px" src="./view/static/assets/logo-black.svg">
 </picture>
-</p>
+
+<br>
+<br>
+<br>
 
 
-**Flipper** is a monitoring service that makes sure re-assignable IPs are always pointed at a healthy host.
+**Flipper** is a monitoring service that makes sure re-assignable IPs are always pointed at healthy hosts.
 
+<br>
 
 # Install
 ```shell
