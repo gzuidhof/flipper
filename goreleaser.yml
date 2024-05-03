@@ -1,0 +1,84 @@
+project_name: flipper
+builds:
+  -
+    id: flipper-build
+    binary: flipper
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    ldflags:
+      - -s -w -X github.com/gzuidhof/flipper/buildinfo.version={{.Version}} -X github.com/gzuidhof/flipper/buildinfo.commit={{.Commit}} -X github.com/gzuidhof/flipper/buildinfo.commitDate={{.CommitDate}}
+archives:
+  -
+    id: flipper-archive
+    builds:
+      - flipper-build
+    name_template: >-
+      {{ .ProjectName }}_
+      {{- .Tag }}_
+      {{- .Os }}_
+      {{- .Arch}}
+    format_overrides:
+      - goos: windows
+        format: zip
+    files:
+      - LICENSE
+      - README.md
+nfpms:
+  - 
+    id: flipper-package
+    package_name: flipper
+    builds:
+      - flipper-build
+    file_name_template: >-
+      {{ .ProjectName }}_
+      {{- .Tag }}_
+      {{- .Os }}_
+      {{- .Arch}}
+    vendor: Guido Zuidhof
+    homepage: https://github.com/gzuidhof/flipper
+    maintainer: Guido Zuidhof <me@guido.io>
+    description: "flipper - a monitoring tool for keeping floating IPs pointed at healthy servers."
+    license: MIT
+    formats:
+      - apk
+      - deb
+      - rpm
+    bindir: /usr/bin
+    section: net
+    priority: optional
+    contents:
+      - dst: /etc/flipper
+        type: dir
+        file_info:
+          owner: root
+          group: root
+          mode: 0750
+      - src: assets/packages/flipper.service
+        dst: /etc/systemd/system/flipper.service
+        type: config
+        file_info:
+          owner: root
+          group: root
+          mode: 0640
+      - src: assets/packages/flipper.yaml
+        dst: /etc/flipper/flipper.yaml
+        type: config
+        file_info:
+          owner: root
+          group: root
+          mode: 0640
+    scripts:
+      postinstall: "assets/packages/post-install.sh"
+      preremove: "assets/packages/pre-uninstall.sh"
+      postremove: "assets/packages/post-uninstall.sh"
+    deb:
+      lintian_overrides:
+        - statically-linked-binary
+        - changelog-file-missing-in-native-package
+snapshot:
+  name_template: "{{ .Tag }}-next"

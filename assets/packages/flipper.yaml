@@ -1,0 +1,23 @@
+version: 1
+
+groups:
+
+notifications:
+  enabled: false
+
+heartbeat:
+  enabled: false
+
+server:
+  enabled: false
+  port: 9521
+  host: localhost
+  shutdown_timeout: 5s
+
+  assets: 
+  templates:
+
+telemetry:
+  logging:
+    level: "info"
+    format: "json"

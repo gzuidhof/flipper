@@ -1,0 +1,14 @@
+{{ define "simple_layout" }}
+  {{ template "base_layout" . }}
+{{ end }}
+
+{{ define "head" }}
+<title>{{ block "title" . }}{{ end }}</title>
+<link rel="stylesheet" href="/static/styles.css" />
+{{ end }}
+
+{{ define "body"}}
+ {{ template "header" . }}
+ <main>{{ template "content" . }}</main>
+  {{ template "footer" . }}
+{{ end }}

@@ -1,0 +1,8 @@
+version: 1
+
+server:
+  enabled: true
+  assets: "view/static/assets"
+  templates: "view/template"
+
+groups:

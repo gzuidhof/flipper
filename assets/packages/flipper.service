@@ -1,0 +1,11 @@
+[Unit]
+Description=Flipper
+After=syslog.target network-online.target
+
+[Service]
+ExecStart=/usr/bin/flipper --config /etc/flipper/flipper.yaml monitor
+Restart=always
+Type=simple
+
+[Install]
+WantedBy=multi-user.target

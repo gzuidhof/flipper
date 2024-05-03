@@ -1,0 +1,40 @@
+{{if .Cfg.ReadOnly}}
+🔒 **Read-only mode**. No actions will be executed.
+{{- else }}
+🏗️ **Executing plan** `{{.Plan.ID}}`...
+{{- end }}
+
+{{template "state.go.tmpl" .}}
+
+{{- $state := .State}}
+
+#### Plan ({{len .Plan.Actions}} actions)
+
+**Plan ID:** `{{.Plan.ID}}`
+
+{{- if .Plan.Empty}}
+*No actions.*
+{{- else }}
+{{range $idx, $action := .Plan.Actions }}
+    {{- $floatingIP := index $state.FloatingIPs $action.FloatingIPID }}
+    {{- $newTarget := index $state.Servers $action.ServerID }}
+    {{- $currentTarget := index $state.Servers $floatingIP.CurrentTarget }}
+{{$idx}}. **`{{$floatingIP.Name}}`** will be retargeted:  
+    {{- if $currentTarget }}
+      {{- if eq $currentTarget.Status "healthy" }} ✅
+      {{- else if eq $currentTarget.Status "unhealthy" }} ❌
+      {{- else if eq $currentTarget.Status "unknown" }} ⏳
+      {{end -}} **`{{$currentTarget.Resource.ServerName}}`**
+    {{- else -}} 
+      {{" "}}*No current target.*  
+    {{- end }}
+    ➤
+    {{- "     "}}{{- if eq $newTarget.Status "healthy" }} ✅
+    {{- else if eq $newTarget.Status "unhealthy" }} ❌
+    {{- else if eq $newTarget.Status "unknown" }} ⏳
+    {{end -}} **`{{$newTarget.Resource.ServerName}}`**  
+  {{- end }}
+{{if .Cfg.ReadOnly}}
+*This group is in read-only mode. No actions will be executed.*
+{{- end}}
+{{- end }}

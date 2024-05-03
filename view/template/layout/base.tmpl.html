@@ -1,0 +1,20 @@
+
+{{ define "base_layout" }}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+
+    <link rel="icon" href="/static/logo-black.svg"/>
+
+    {{block "head" .}}
+    <title> {{ block "title" . }}{{ end }} | Flipper</title>
+    {{end}}
+  </head>
+  <body>
+    {{ block "body" . }}{{ end }}
+  </body>
+</html>
+{{ end }}

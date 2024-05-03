@@ -1,0 +1,18 @@
+version: 1
+
+service:
+  name: flipper
+
+telemetry:
+  logging:
+    level: "info"
+    format: "json"
+
+server:
+  enabled: false
+  port: 9521
+  host: localhost
+  shutdown_timeout: 5s
+
+  assets: 
+  templates:
