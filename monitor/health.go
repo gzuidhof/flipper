@@ -171,7 +171,7 @@ func (h *HealthKeeper) Start(
 							update.Server.ID(),
 							update.Server.Location,
 						)+
-							fmt.Sprintf("```\n%+v\n```\n", update.UnhealthyChecks())+notificationtemplate.RenderState(h.cfg, h.state),
+							fmt.Sprintf("```\n%s\n\n%+v\n```\n", update.Result.LastUpdate().ID, update.UnhealthyChecks())+notificationtemplate.RenderState(h.cfg, h.state),
 					)
 
 					h.logger.ErrorContext(ctx, "Server became unhealthy.",
