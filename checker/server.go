@@ -57,7 +57,7 @@ func NewServerChecker(
 		if server.PublicIPv6.IsValid() && c.IPVersion != "ipv4" {
 			ipv6c := c
 			ipv6c.ID += "__ipv6"
-			checks = append(checks, check.NewHTTPCheck(c, server.PublicIPv6.String()))
+			checks = append(checks, check.NewHTTPCheck(ipv6c, server.PublicIPv6.String()))
 		}
 	}
 
