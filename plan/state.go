@@ -56,7 +56,6 @@ func (s State) CandidateServers() []*resource.WithStatus[resource.Server] {
 	}
 
 	if len(candidates) == 0 {
-		slog.Warn("no healthy servers found")
 		// We use all servers as candidates if there are no healthy ones.
 		for _, server := range s.Servers {
 			candidates = append(candidates, server)

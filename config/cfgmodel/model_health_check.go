@@ -42,7 +42,7 @@ type HealthCheckConfig struct {
 
 	// Port is the port to check. Must be between 1 and 65535.
 	// Defaults to 80 for HTTP and 443 for HTTPS.
-	Port uint `koanf:"port"`
+	Port int `koanf:"port"`
 
 	// Path is the URL path to check. Should start with a forward slash "/".
 	Path string `koanf:"path"`
@@ -64,7 +64,10 @@ func (h HealthCheckConfig) PortOrDefault() uint {
 		}
 		return 80
 	}
-	return h.Port
+	if h.Port < 0 { // Impossible with the validation.. but just in case.
+		panic("check.port must be positive")
+	}
+	return uint(h.Port)
 }
 
 // MethodOrDefault returns the method or the default method if not set.
