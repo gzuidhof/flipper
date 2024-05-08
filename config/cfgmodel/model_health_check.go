@@ -132,7 +132,7 @@ func (h HealthCheckConfig) Validate() error {
 			http.MethodTrace,
 			http.MethodPatch,
 		)),
-		validation.Field(&h.Port, validation.Length(1, math.MaxUint16)),
+		validation.Field(&h.Port, validation.Min(1), validation.Max(math.MaxUint16)),
 		validation.Field(&h.Path, validation.Required, validation.Match(regexp.MustCompile("^/.*$"))),
 		validation.Field(&h.Host, validation.When(h.Type == "https", validation.Required)),
 		validation.Field(&h.IPVersion, validation.In("ipv4", "ipv6", "both")),
