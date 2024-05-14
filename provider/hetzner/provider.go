@@ -116,14 +116,17 @@ func (c Provider) Poll(ctx context.Context) (resource.Group, error) {
 		}
 
 		for _, srv := range srvs {
+			ipv4Target := netip.MustParseAddr(srv.PublicNet.IPv4.IP.String())
+			ipv6Target := getTargetIPv6Address(srv.PublicNet.IPv6)
+
 			servers = append(servers, resource.Server{
 				Provider:      c.Name(),
 				HetznerID:     srv.ID,
 				ServerName:    srv.Name,
 				Location:      srv.Datacenter.Location.Name,
 				NetworkZone:   string(srv.Datacenter.Location.NetworkZone),
-				PublicIPv4:    netip.MustParseAddr(srv.PublicNet.IPv4.IP.String()),
-				PublicIPv6:    netip.MustParseAddr(srv.PublicNet.IPv6.IP.String()),
+				PublicIPv4:    ipv4Target,
+				PublicIPv6:    ipv6Target,
 				ResourceIndex: resourceIndexFromLabel(srv.Labels),
 			})
 		}
