@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log/slog"
 
+	"github.com/gzuidhof/flipper/buildinfo"
 	"github.com/gzuidhof/flipper/config/cfgmodel"
 	"github.com/gzuidhof/flipper/notification"
 	"github.com/gzuidhof/flipper/notification/notificationtemplate"
@@ -97,9 +98,15 @@ func (g *Group) Start(ctx context.Context) error {
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
 
-	_ = g.notifier.Notify(ctx,
-		fmt.Sprintf(":eyes: Starting monitor for group **%s** (`%s`).", g.cfg.DisplayName, g.cfg.ID),
-	)
+	msg := fmt.Sprintf(":eyes: Starting monitor for group **%s** (`%s`). Flipper version `%s`. ",
+		g.cfg.DisplayName, g.cfg.ID, buildinfo.Version())
+
+	if g.cfg.ReadOnly {
+		msg += "\n:lock: **Read-only mode** enabled, no actions will be taken. Only unhealthy/healthy notifications" +
+			"will be sent."
+	}
+
+	_ = g.notifier.Notify(ctx, msg)
 
 	updateChan := make(chan ResourceUpdate, 16)
 	errChan := make(chan error, 16)
