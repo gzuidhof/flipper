@@ -103,7 +103,7 @@ func (g *Group) Start(ctx context.Context) error {
 
 	if g.cfg.ReadOnly {
 		msg += "\n:lock: **Read-only mode** enabled, no actions will be taken. Only unhealthy/healthy notifications" +
-			"will be sent."
+			" will be sent."
 	}
 
 	_ = g.notifier.Notify(ctx, msg)
