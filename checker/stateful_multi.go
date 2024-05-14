@@ -2,6 +2,7 @@ package checker
 
 import (
 	"context"
+	"maps"
 )
 
 // StatefulMulti is a health checker that combines multiple stateful health checks.
@@ -104,7 +105,9 @@ func (c *StatefulMulti[ResultType]) Start(
 			update := StatefulMultiUpdate[ResultType]{
 				HealthState:   c.worstState(),
 				lastUpdatedID: recvUpdate.ID,
-				updates:       c.lastUpdates,
+				// We need to make a clone because we don't want to send the map by reference as we
+				// mutate it locally.
+				updates: maps.Clone(c.lastUpdates),
 			}
 			if ctx.Err() != nil {
 				return
