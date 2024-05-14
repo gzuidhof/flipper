@@ -8,8 +8,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestgetIPv6AddressFromNetwork(t *testing.T) {
-
+func TestGetIPv6AddressFromNetwork(t *testing.T) {
 	ip, net, err := net.ParseCIDR("2a01:4f8:1c17:1d1::/64")
 	require.NoError(t, err)
 
