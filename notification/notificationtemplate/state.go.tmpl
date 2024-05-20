@@ -37,7 +37,7 @@
 
 **Floating IPs pointed at servers outside of group**:
   {{- range .FloatingIPsTargetedOutsideGroup }}
-- ❓ **`{{.Name}}`** (`{{.ID}}``) `{{.IP}}`  {{if index $.ToBeReassigned .ID}}(👉 to be assigned){{end}}
+- ❓ **`{{.Name}}`** (`{{.ID}}`) `{{.IP}}`  {{if index $.ToBeReassigned .ID}}(👉 to be assigned){{end}}
   {{- end }}
 {{- else }}
 *No floating IPs pointed at servers outside of group.*
