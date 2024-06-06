@@ -18,6 +18,7 @@ func NewFloatingIP(name, location, networkZone string, ip netip.Addr) resource.F
 		NetworkZone:    networkZone,
 		IP:             ip,
 		CurrentTarget:  "",
+		URL:            "",
 	}
 }
 

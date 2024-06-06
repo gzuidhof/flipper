@@ -33,7 +33,7 @@ func (s Status) String() string {
 }
 
 // WithStatusSlice is a list of resources with associated statuses.
-type WithStatusSlice[R Resource] []WithStatus[R]
+type WithStatusSlice[R Resource] []*WithStatus[R]
 
 // WithStatus is a resource with an associated status, which can be updated atomically.
 type WithStatus[R Resource] struct {

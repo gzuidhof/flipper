@@ -88,6 +88,7 @@ func (w *ResourcesWatcher) performUpdate(
 	ctx context.Context,
 	onChange chan<- ResourceUpdate,
 	onError chan<- error,
+	forceSendUpdate bool,
 ) uint64 {
 	seq := w.bumpSequence()
 
@@ -99,7 +100,7 @@ func (w *ResourcesWatcher) performUpdate(
 		onError <- err
 		return seq
 	}
-	if !cs.Empty() {
+	if forceSendUpdate || !cs.Empty() {
 		onChange <- ResourceUpdate{
 			Resources: r,
 			Changeset: cs,
@@ -123,7 +124,7 @@ func (w *ResourcesWatcher) Start(ctx context.Context, onChange chan<- ResourceUp
 	defer close(onError)
 
 	slog.DebugContext(ctx, "Watcher performining initial resources update.")
-	w.performUpdate(ctx, onChange, onError)
+	w.performUpdate(ctx, onChange, onError, false)
 
 	for {
 		select {
@@ -131,7 +132,7 @@ func (w *ResourcesWatcher) Start(ctx context.Context, onChange chan<- ResourceUp
 			return
 		case <-ticker.C:
 			slog.DebugContext(ctx, "Watcher polling resources.")
-			w.performUpdate(ctx, onChange, onError)
+			w.performUpdate(ctx, onChange, onError, false)
 		}
 	}
 }

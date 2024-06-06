@@ -193,7 +193,7 @@ func (g *Group) Start(ctx context.Context) error {
 					slog.Int("num_unhealthy_servers", numUnhealthy))
 			}
 
-			minSequence = g.watcher.performUpdate(ctx, updateChan, errChan)
+			minSequence = g.watcher.performUpdate(ctx, updateChan, errChan, true)
 		}
 	}
 }

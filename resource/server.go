@@ -43,6 +43,9 @@ type Server struct {
 
 	// PublicIPv6 is the public IPv6 address of the server.
 	PublicIPv6 netip.Addr
+
+	// URL is the URL to the server in the Cloud Provider's console.
+	URL string
 }
 
 // ID returns the unique identifier of the server.

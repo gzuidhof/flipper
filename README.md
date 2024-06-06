@@ -45,7 +45,8 @@ groups:
     poll_interval: 60s
 
     hetzner:
-      api_token: "abc123" # Your Hetzner API token
+      api_token: "abc123" # Your Hetzner API token.
+      project_id: 123456 # Your Hetzner's project ID (you can find it in the URL in the Hetzner dashboard).
       servers:
         # These label selectors are how you tell flipper which servers it should watch. 
         # See the label selector docs at https://docs.hetzner.cloud/#label-selector.
