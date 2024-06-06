@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log/slog"
+	"time"
 
 	"github.com/gzuidhof/flipper/buildinfo"
 	"github.com/gzuidhof/flipper/config/cfgmodel"
@@ -89,6 +90,15 @@ func (g *Group) executePlan(ctx context.Context, logger *slog.Logger, state plan
 			slog.String("server_id", serverWithStatus.Resource.ID()),
 		)
 	}
+
+	if g.provider.Name() == "hetzner" {
+		// Hetzner keeps the floating IPs locked for a short while after assigning them.
+		// So we add a small sleep here to prevent a potential plan that happens right after from failing.
+		// This is a bit of a hack, but it's the simplest solution for now. A potential future solution
+		// could be to retry on lock errors (within the Hetzner provider perhaps).
+		time.Sleep(time.Second)
+	}
+
 	return nil
 }
 
