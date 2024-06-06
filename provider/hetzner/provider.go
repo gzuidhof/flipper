@@ -93,6 +93,9 @@ func (c Provider) Poll(ctx context.Context) (resource.Group, error) {
 				currentTarget = hetznerIDToResourceID(flip.Server.ID)
 			}
 
+			url := fmt.Sprintf("https://console.hetzner.cloud/projects/%s/floatingips/%d",
+				c.cfg.Hetzner.ProjectID, flip.ID)
+
 			floatingIPs = append(floatingIPs, resource.FloatingIP{
 				Provider:       c.Name(),
 				HetznerID:      flip.ID,
@@ -102,6 +105,7 @@ func (c Provider) Poll(ctx context.Context) (resource.Group, error) {
 				IP:             ipParsed,
 				CurrentTarget:  currentTarget,
 				ResourceIndex:  resourceIndexFromLabel(flip.Labels),
+				URL:            url,
 			})
 		}
 		return nil
@@ -119,6 +123,9 @@ func (c Provider) Poll(ctx context.Context) (resource.Group, error) {
 			ipv4Target := netip.MustParseAddr(srv.PublicNet.IPv4.IP.String())
 			ipv6Target := getTargetIPv6Address(srv.PublicNet.IPv6)
 
+			url := fmt.Sprintf("https://console.hetzner.cloud/projects/%s/servers/%d",
+				c.cfg.Hetzner.ProjectID, srv.ID)
+
 			servers = append(servers, resource.Server{
 				Provider:      c.Name(),
 				HetznerID:     srv.ID,
@@ -128,6 +135,7 @@ func (c Provider) Poll(ctx context.Context) (resource.Group, error) {
 				PublicIPv4:    ipv4Target,
 				PublicIPv6:    ipv6Target,
 				ResourceIndex: resourceIndexFromLabel(srv.Labels),
+				URL:           url,
 			})
 		}
 		return nil

@@ -1,22 +1,20 @@
-**{{.Cfg.DisplayName}}** (`{{.Cfg.ID}}`), provider `{{.Cfg.Provider}}` {{if .Cfg.ReadOnly}}**(Read-only)**{{end}}
+**{{.Cfg.DisplayName}}** (`{{.Cfg.ID}}`) in **{{.Cfg.Provider}}** {{if .Cfg.ReadOnly}}*(Read-only)*{{end}}
 
 **Servers**:
 
-{{- range $server := .State.Servers }}
+{{- range $server := .State.ServersAsSlice }}
   -
   {{- if eq $server.Status "healthy" }} ✅
   {{- else if eq $server.Status "unhealthy" }} ❌
   {{- else if eq $server.Status "unknown" }} ⏳
   {{end -}}
-  **`{{$server.Resource.ServerName}}`**
+  [**`{{$server.Resource.ServerName}}`**]({{$server.Resource.URL}}) **_{{$server.Status.String}}_** since `{{$server.State.LastUpdated.UTC.Format "2006-01-02 15:04:05"}}`
 
-    (`{{$server.Resource.ID}}`)
-    **Status**:  **_{{$server.Status.String}}_** (last update `{{$server.State.LastUpdated.UTC.Format "2006-01-02 15:04:05"}}`)
   {{- with index $.FloatingIPsByServer $server.Resource.ID }}
     {{- if . }}
-    **Targeted by**:
+    , targeted by:
     {{- range . }}
-     - {{if index $.ToBeReassigned .ID}}👉{{else}} {{end}} **`{{.Name}}`** (`{{.ID}}`) `{{.IP}}`
+     - {{if index $.ToBeReassigned .ID}}👉{{else}} {{end}} [**`{{.Name}}`**]({{.URL}}) `{{.IP}}`
     {{- end }}
     {{- else }}
       *No floating IPs assigned to this server.*
@@ -27,7 +25,7 @@
 {{if .UnassignedFloatingIPs }}
 **Unassigned floating IPs**:
   {{- range .UnassignedFloatingIPs }}
-- **`{{.Name}}`** (`{{.ID}}``) `{{.IP}}`  {{if index $.ToBeReassigned .ID}}(👉 to be assigned){{end}}
+- [**`{{.Name}}`**]({{.URL}}) `{{.IP}}`  {{if index $.ToBeReassigned .ID}}(👉 to be assigned){{end}}
   {{- end }}
 {{- else }}
 *No unassigned floating IPs.*
@@ -37,7 +35,7 @@
 
 **Floating IPs pointed at servers outside of group**:
   {{- range .FloatingIPsTargetedOutsideGroup }}
-- ❓ **`{{.Name}}`** (`{{.ID}}`) `{{.IP}}`  {{if index $.ToBeReassigned .ID}}(👉 to be assigned){{end}}
+- ❓ [**`{{.Name}}`**]({{.URL}}) `{{.IP}}`  {{if index $.ToBeReassigned .ID}}(👉 to be assigned){{end}}
   {{- end }}
 {{- else }}
 *No floating IPs pointed at servers outside of group.*

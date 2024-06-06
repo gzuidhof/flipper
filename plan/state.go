@@ -197,3 +197,27 @@ func (s State) NumUnhealthyServers() int {
 	}
 	return count
 }
+
+// ServersAsSlice returns the servers as a slice in a fixed order.
+func (s State) ServersAsSlice() resource.WithStatusSlice[resource.Server] {
+	servers := make(resource.WithStatusSlice[resource.Server], 0, len(s.Servers))
+	for _, server := range s.Servers {
+		servers = append(servers, server)
+	}
+
+	// Sort the servers by name.
+	servers.SortByName()
+	return servers
+}
+
+// FloatingIPsAsSlice returns the floating IPs as a slice in a fixed order.
+func (s State) FloatingIPsAsSlice() resource.FloatingIPs {
+	fips := make(resource.FloatingIPs, 0, len(s.FloatingIPs))
+	for _, fip := range s.FloatingIPs {
+		fips = append(fips, fip)
+	}
+
+	// Sort the floating IPs by name.
+	fips.SortByName()
+	return fips
+}

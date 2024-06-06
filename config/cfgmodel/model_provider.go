@@ -9,6 +9,13 @@ type HetznerProviderConfig struct {
 	// API token to use to authenticate with Hetzner
 	APIToken string `koanf:"api_token"`
 
+	// ProjectID is the ID of the project to use, you can find this in the URL of the Hetzner Cloud Console.
+	// For example, if the URL is https://console.hetzner.cloud/projects/123456, the project ID is 123456.
+	//
+	// Hetzner does not provide a way to list projects or check the ID, so you will need to know this in advance,
+	// see https://github.com/hetznercloud/hcloud-go/issues/451.
+	ProjectID string `koanf:"project_id"`
+
 	FloatingIPs HetznerSelector `koanf:"floating_ips"`
 	Servers     HetznerSelector `koanf:"servers"`
 }
@@ -17,6 +24,7 @@ type HetznerProviderConfig struct {
 func (c HetznerProviderConfig) Validate() error {
 	return validation.ValidateStruct(&c,
 		validation.Field(&c.APIToken, validation.Required),
+		validation.Field(&c.ProjectID, validation.Required),
 		validation.Field(&c.FloatingIPs, validation.Required),
 		validation.Field(&c.Servers, validation.Required),
 	)

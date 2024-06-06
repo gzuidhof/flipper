@@ -43,6 +43,9 @@ type FloatingIP struct {
 	//
 	// This should be `-1` if unknown (or invalid).
 	ResourceIndex int
+
+	// URL is the URL of the floating IP in the cloud provider's web interface.
+	URL string
 }
 
 // ID returns the unique identifier of the floating IP.
