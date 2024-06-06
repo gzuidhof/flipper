@@ -166,9 +166,9 @@ func (h *HealthKeeper) Start(
 					// TODO improve the formatting here.. This is a bit of a mess.
 					// We should use a template for this (and the below healthy message).
 					_ = h.notifier.Notify(ctx,
-						fmt.Sprintf(":fire: Server **`%s`** (%s) in location `%s` became **_unhealthy_**.\n",
+						fmt.Sprintf(":fire: Server [**`%s`**](%s) in location `%s` became **_unhealthy_**.\n",
 							update.Server.Name(),
-							update.Server.ID(),
+							update.Server.URL,
 							update.Server.Location,
 						)+
 							fmt.Sprintf(
@@ -187,9 +187,9 @@ func (h *HealthKeeper) Start(
 					update.PreviousServerState.Status != resource.StatusUnknown {
 					_ = h.notifier.Notify(ctx,
 						fmt.Sprintf(
-							"✅ Server **`%s`** (%s) in location `%s` became **_healthy_** again.\n",
+							"✅ Server [**`%s`**](%s) in location `%s` became **_healthy_** again.\n",
 							update.Server.Name(),
-							update.Server.ID(),
+							update.Server.URL,
 							update.Server.Location,
 						)+notificationtemplate.RenderState(h.cfg, h.state),
 					)

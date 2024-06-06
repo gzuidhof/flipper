@@ -1,4 +1,4 @@
-**{{.Cfg.DisplayName}}** (`{{.Cfg.ID}}`), provider `{{.Cfg.Provider}}` {{if .Cfg.ReadOnly}}**(Read-only)**{{end}}
+**{{.Cfg.DisplayName}}** (`{{.Cfg.ID}}`) in **{{.Cfg.Provider}}** {{if .Cfg.ReadOnly}}*(Read-only)*{{end}}
 
 **Servers**:
 
@@ -8,11 +8,11 @@
   {{- else if eq $server.Status "unhealthy" }} ❌
   {{- else if eq $server.Status "unknown" }} ⏳
   {{end -}}
-  [**`{{$server.Resource.ServerName}}`**]({{$server.Resource.URL}}) **_{{$server.Status.String}}_** (since `{{$server.State.LastUpdated.UTC.Format "2006-01-02 15:04:05"}}`)
+  [**`{{$server.Resource.ServerName}}`**]({{$server.Resource.URL}}) **_{{$server.Status.String}}_** since `{{$server.State.LastUpdated.UTC.Format "2006-01-02 15:04:05"}}`
 
   {{- with index $.FloatingIPsByServer $server.Resource.ID }}
     {{- if . }}
-    **Targeted by**:
+    , targeted by:
     {{- range . }}
      - {{if index $.ToBeReassigned .ID}}👉{{else}} {{end}} [**`{{.Name}}`**]({{.URL}}) `{{.IP}}`
     {{- end }}
