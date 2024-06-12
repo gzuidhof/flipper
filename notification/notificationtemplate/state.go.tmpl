@@ -1,6 +1,4 @@
-**{{.Cfg.DisplayName}}** (`{{.Cfg.ID}}`) in **{{.Cfg.Provider}}** {{if .Cfg.ReadOnly}}*(Read-only)*{{end}}
-
-**Servers**:
+**{{.Cfg.DisplayName}}** (`{{.Cfg.ID}}`) in **{{.Cfg.Provider}}** {{if .Cfg.ReadOnly}}*(Read-only)*{{end}} servers:
 
 {{- range $server := .State.ServersAsSlice }}
   -
@@ -37,6 +35,5 @@
   {{- range .FloatingIPsTargetedOutsideGroup }}
 - ❓ [**`{{.Name}}`**]({{.URL}}) `{{.IP}}`  {{if index $.ToBeReassigned .ID}}(👉 to be assigned){{end}}
   {{- end }}
-{{- else }}
-*No floating IPs pointed at servers outside of group.*
+{{- else }} *No floating IPs pointed at servers outside of group.*
 {{- end }}
