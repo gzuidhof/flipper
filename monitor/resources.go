@@ -25,6 +25,8 @@ type ResourceUpdate struct {
 type ResourcesWatcher struct {
 	sync.Mutex
 
+	updateMutex sync.Mutex
+
 	cfg      cfgmodel.GroupConfig
 	provider resource.Provider
 	logger   *slog.Logger
@@ -90,6 +92,9 @@ func (w *ResourcesWatcher) performUpdate(
 	onError chan<- error,
 	forceSendUpdate bool,
 ) uint64 {
+	w.updateMutex.Lock()
+	defer w.updateMutex.Unlock()
+
 	seq := w.bumpSequence()
 
 	r, cs, err := w.Update(ctx)
@@ -123,7 +128,7 @@ func (w *ResourcesWatcher) Start(ctx context.Context, onChange chan<- ResourceUp
 	defer close(onChange)
 	defer close(onError)
 
-	slog.DebugContext(ctx, "Watcher performining initial resources update.")
+	slog.DebugContext(ctx, "Watcher performing initial resources update.")
 	w.performUpdate(ctx, onChange, onError, false)
 
 	for {
