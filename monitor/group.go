@@ -150,7 +150,7 @@ func (g *Group) Start(ctx context.Context) error {
 			// During the time that we apply the plan we might have received more updates that are no longer
 			// relevant. We ignore them by checking the sequence number.
 			if action.ResourcesSequence < minSequence {
-				g.logger.DebugContext(ctx, "Ignoring stale action with sequence lower than min sequence.",
+				g.logger.InfoContext(ctx, "Ignoring stale action with sequence lower than min sequence.",
 					slog.Uint64("sequence", action.ResourcesSequence),
 					slog.Uint64("min_sequence", minSequence),
 				)
