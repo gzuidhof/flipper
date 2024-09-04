@@ -74,7 +74,7 @@ func (h *HealthKeeper) updateResourceChanges(
 	//
 	// We expect this to fire once when the healthkeeper starts up: then let's not notify.
 	if h.didReceiveInitialResourcesUpdate && !changeset.IsUpdatesOnly() {
-		msg := fmt.Sprintf("⚡️ Resources in group **%s** (`%s`) being watched changed substantially changed.\n",
+		msg := fmt.Sprintf("⚡️ Resources in group **%s** (`%s`) being watched changed substantially.\n",
 			h.cfg.DisplayName, h.cfg.ID,
 		) + fmt.Sprintf("```\n%s\n```", changeset) // TODO: prettyprint this through some template.
 		_ = h.notifier.Notify(ctx, msg)
@@ -111,6 +111,10 @@ func (h *HealthKeeper) updateResourceChanges(
 		startServerChecker(ctx, server)
 	}
 	for _, server := range changeset.Servers.Removed {
+		cancelServerWatcher, ok := h.serverWatcherCancel[server.ID()]
+		if ok {
+			cancelServerWatcher()
+		}
 		delete(h.state.Servers, server.ID())
 	}
 }
