@@ -30,6 +30,11 @@ type GroupConfig struct {
 	// This defaults to 30 seconds.
 	PlanApplyTimeout time.Duration `koanf:"plan_apply_timeout"`
 
+	// PostPlanDelay is the time to wait after a plan is applied before allowing another plan.
+	// This is useful to prevent plans happening too quickly in succession.
+	// This defaults to 0 (disabled).
+	PostPlanDelay time.Duration `koanf:"post_plan_delay"`
+
 	// PlanApplyWithUnknownStatus is a flag that indicates that the group should apply plans
 	// even if the status of one or more servers is unknown.
 	PlanApplyWithUnkownStatus bool `koanf:"plan_apply_with_unknown_status"`
@@ -88,6 +93,11 @@ func (c GroupConfig) PlanApplyTimeoutOrDefault() time.Duration {
 		return 30 * time.Second
 	}
 	return c.PlanApplyTimeout
+}
+
+// PostPlanDelayOrDefault returns the post-plan delay (default is 0, disabled).
+func (c GroupConfig) PostPlanDelayOrDefault() time.Duration {
+	return c.PostPlanDelay
 }
 
 // ServiceConfig describes the service. The name is used in metrics and logs.
