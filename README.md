@@ -44,6 +44,9 @@ groups:
     # How often should we talk to Hetzner to look for changes w.r.t. the infra itself?
     poll_interval: 60s
 
+    # How long to wait after applying a plan before allowing another plan. Default is 1s. Set to 0 to disable.
+    post_plan_delay: 1s
+
     hetzner:
       api_token: "abc123" # Your Hetzner API token.
       project_id: 123456 # Your Hetzner's project ID (you can find it in the URL in the Hetzner dashboard).
