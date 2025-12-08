@@ -16,7 +16,7 @@ func servers(state resource.Status, location, networkZone string, ids ...int64) 
 	for idx, id := range ids {
 		serv := resource.Server{
 			ServerName:    fmt.Sprintf("mock-server-%d", id),
-			HetznerID:     id,
+			ServerID:      id,
 			Location:      location,
 			NetworkZone:   networkZone,
 			Provider:      resource.ProviderNameMock,
@@ -41,9 +41,9 @@ func TestPlan(t *testing.T) {
 			name:    "no_changes",
 			servers: servers(resource.StatusHealthy, "nbg1", "eu-central", 1, 2, 3),
 			floatingIPs: []resource.FloatingIP{
-				{HetznerID: 1, Location: "nbg1", NetworkZone: "eu-central", CurrentTarget: "1", FloatingIPName: "floating-ip-1"},
-				{HetznerID: 2, Location: "nbg1", NetworkZone: "eu-central", CurrentTarget: "2", FloatingIPName: "floating-ip-2"},
-				{HetznerID: 3, Location: "nbg1", NetworkZone: "eu-central", CurrentTarget: "3", FloatingIPName: "floating-ip-3"},
+				{ProviderID: 1, Location: "nbg1", NetworkZone: "eu-central", CurrentTarget: "1", FloatingIPName: "floating-ip-1"},
+				{ProviderID: 2, Location: "nbg1", NetworkZone: "eu-central", CurrentTarget: "2", FloatingIPName: "floating-ip-2"},
+				{ProviderID: 3, Location: "nbg1", NetworkZone: "eu-central", CurrentTarget: "3", FloatingIPName: "floating-ip-3"},
 			},
 			expectedPlan: Plan{
 				Actions: []ReassignFloatingIPAction{},
@@ -53,9 +53,9 @@ func TestPlan(t *testing.T) {
 			name:    "spread", // spread the floating IPs across the servers
 			servers: servers(resource.StatusHealthy, "nbg1", "eu-central", 1, 2, 3),
 			floatingIPs: []resource.FloatingIP{ // They start out all on server 1
-				{HetznerID: 1, Location: "nbg1", NetworkZone: "eu-central", CurrentTarget: "1", FloatingIPName: "floating-ip-1"},
-				{HetznerID: 2, Location: "nbg1", NetworkZone: "eu-central", CurrentTarget: "1", FloatingIPName: "floating-ip-2"},
-				{HetznerID: 3, Location: "nbg1", NetworkZone: "eu-central", CurrentTarget: "1", FloatingIPName: "floating-ip-3"},
+				{ProviderID: 1, Location: "nbg1", NetworkZone: "eu-central", CurrentTarget: "1", FloatingIPName: "floating-ip-1"},
+				{ProviderID: 2, Location: "nbg1", NetworkZone: "eu-central", CurrentTarget: "1", FloatingIPName: "floating-ip-2"},
+				{ProviderID: 3, Location: "nbg1", NetworkZone: "eu-central", CurrentTarget: "1", FloatingIPName: "floating-ip-3"},
 			},
 			expectedPlan: Plan{
 				Actions: []ReassignFloatingIPAction{
@@ -68,9 +68,9 @@ func TestPlan(t *testing.T) {
 			name:    "spread_looparound",
 			servers: servers(resource.StatusHealthy, "nbg1", "eu-central", 1, 2),
 			floatingIPs: []resource.FloatingIP{
-				{HetznerID: 1, Location: "nbg1", NetworkZone: "eu-central", CurrentTarget: "1", FloatingIPName: "floating-ip-1"},
-				{HetznerID: 2, Location: "nbg1", NetworkZone: "eu-central", CurrentTarget: "1", FloatingIPName: "floating-ip-2"},
-				{HetznerID: 3, Location: "nbg1", NetworkZone: "eu-central", CurrentTarget: "1", FloatingIPName: "floating-ip-3"},
+				{ProviderID: 1, Location: "nbg1", NetworkZone: "eu-central", CurrentTarget: "1", FloatingIPName: "floating-ip-1"},
+				{ProviderID: 2, Location: "nbg1", NetworkZone: "eu-central", CurrentTarget: "1", FloatingIPName: "floating-ip-2"},
+				{ProviderID: 3, Location: "nbg1", NetworkZone: "eu-central", CurrentTarget: "1", FloatingIPName: "floating-ip-3"},
 			},
 			expectedPlan: Plan{
 				Actions: []ReassignFloatingIPAction{
@@ -85,9 +85,9 @@ func TestPlan(t *testing.T) {
 				servers(resource.StatusHealthy, "fsn1", "eu-central", 3, 4)...,
 			),
 			floatingIPs: []resource.FloatingIP{ // Start unassigned.
-				{HetznerID: 1, Location: "nbg1", NetworkZone: "eu-central", CurrentTarget: "", FloatingIPName: "floating-ip-1"},
-				{HetznerID: 2, Location: "nbg1", NetworkZone: "eu-central", CurrentTarget: "", FloatingIPName: "floating-ip-2"},
-				{HetznerID: 3, Location: "nbg1", NetworkZone: "eu-central", CurrentTarget: "", FloatingIPName: "floating-ip-3"},
+				{ProviderID: 1, Location: "nbg1", NetworkZone: "eu-central", CurrentTarget: "", FloatingIPName: "floating-ip-1"},
+				{ProviderID: 2, Location: "nbg1", NetworkZone: "eu-central", CurrentTarget: "", FloatingIPName: "floating-ip-2"},
+				{ProviderID: 3, Location: "nbg1", NetworkZone: "eu-central", CurrentTarget: "", FloatingIPName: "floating-ip-3"},
 			},
 			expectedPlan: Plan{
 				Actions: []ReassignFloatingIPAction{
@@ -101,9 +101,9 @@ func TestPlan(t *testing.T) {
 			name:    "other_location",
 			servers: servers(resource.StatusHealthy, "nbg1", "eu-central", 1, 2),
 			floatingIPs: []resource.FloatingIP{
-				{HetznerID: 1, Location: "nbg1", NetworkZone: "eu-central", CurrentTarget: "", FloatingIPName: "floating-ip-1"},
-				{HetznerID: 2, Location: "fsn1", NetworkZone: "eu-central", CurrentTarget: "", FloatingIPName: "floating-ip-2"},
-				{HetznerID: 3, Location: "fsn1", NetworkZone: "eu-central", CurrentTarget: "", FloatingIPName: "floating-ip-3"},
+				{ProviderID: 1, Location: "nbg1", NetworkZone: "eu-central", CurrentTarget: "", FloatingIPName: "floating-ip-1"},
+				{ProviderID: 2, Location: "fsn1", NetworkZone: "eu-central", CurrentTarget: "", FloatingIPName: "floating-ip-2"},
+				{ProviderID: 3, Location: "fsn1", NetworkZone: "eu-central", CurrentTarget: "", FloatingIPName: "floating-ip-3"},
 			},
 			expectedPlan: Plan{
 				Actions: []ReassignFloatingIPAction{
@@ -117,7 +117,7 @@ func TestPlan(t *testing.T) {
 			name:    "different_network_zone",
 			servers: servers(resource.StatusHealthy, "nbg1", "eu-north", 1),
 			floatingIPs: []resource.FloatingIP{
-				{HetznerID: 1, Location: "nbg1", NetworkZone: "eu-central", CurrentTarget: "", FloatingIPName: "floating-ip-1"},
+				{ProviderID: 1, Location: "nbg1", NetworkZone: "eu-central", CurrentTarget: "", FloatingIPName: "floating-ip-1"},
 			},
 			expectedPlan: Plan{
 				Actions: []ReassignFloatingIPAction{},
@@ -130,9 +130,9 @@ func TestPlan(t *testing.T) {
 				servers(resource.StatusHealthy, "fsn1", "eu-central", 3, 4)...,
 			),
 			floatingIPs: []resource.FloatingIP{
-				{HetznerID: 1, Location: "nbg1", NetworkZone: "eu-central", CurrentTarget: "1", FloatingIPName: "floating-ip-1"},
-				{HetznerID: 2, Location: "nbg1", NetworkZone: "eu-central", CurrentTarget: "2", FloatingIPName: "floating-ip-2"},
-				{HetznerID: 3, Location: "nbg1", NetworkZone: "eu-central", CurrentTarget: "", FloatingIPName: "floating-ip-3"},
+				{ProviderID: 1, Location: "nbg1", NetworkZone: "eu-central", CurrentTarget: "1", FloatingIPName: "floating-ip-1"},
+				{ProviderID: 2, Location: "nbg1", NetworkZone: "eu-central", CurrentTarget: "2", FloatingIPName: "floating-ip-2"},
+				{ProviderID: 3, Location: "nbg1", NetworkZone: "eu-central", CurrentTarget: "", FloatingIPName: "floating-ip-3"},
 			},
 			expectedPlan: Plan{
 				Actions: []ReassignFloatingIPAction{
@@ -146,7 +146,7 @@ func TestPlan(t *testing.T) {
 			name:    "assigned_to_unknown_server",
 			servers: servers(resource.StatusHealthy, "nbg1", "eu-central", 1),
 			floatingIPs: []resource.FloatingIP{
-				{HetznerID: 1, Location: "nbg1", NetworkZone: "eu-central", CurrentTarget: "1234", FloatingIPName: "floating-ip-1"},
+				{ProviderID: 1, Location: "nbg1", NetworkZone: "eu-central", CurrentTarget: "1234", FloatingIPName: "floating-ip-1"},
 			},
 			expectedPlan: Plan{
 				Actions: []ReassignFloatingIPAction{},

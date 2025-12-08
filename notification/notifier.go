@@ -24,7 +24,7 @@ func (n *NoopNotifier) Notify(_ context.Context, _ string) error {
 
 // NewNotifierFromConfig creates a new Notifier from the given NotificationsConfig.
 //
-//nolint:ireturn // This is a factory function, it's okay to return an interface.
+//nolint:ireturn,nolintlint // This is a factory function, it's okay to return an interface.
 func NewNotifierFromConfig(cfg cfgmodel.NotificationsConfig, logger *slog.Logger) (Notifier, error) {
 	if !cfg.Enabled {
 		return &NoopNotifier{}, nil

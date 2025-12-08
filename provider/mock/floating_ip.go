@@ -12,7 +12,7 @@ func NewFloatingIP(name, location, networkZone string, ip netip.Addr) resource.F
 	return resource.FloatingIP{
 		Provider: resource.ProviderNameMock,
 		//nolint:gosec // This is a mock provider, so we don't need to worry about cryptographic security.
-		HetznerID:      rand.Int63(),
+		ProviderID:     rand.Int63(),
 		FloatingIPName: name,
 		Location:       location,
 		NetworkZone:    networkZone,

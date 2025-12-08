@@ -1,0 +1,57 @@
+version: 1
+
+telemetry:
+  logging:
+    level: "debug"
+    format: "text"
+
+heartbeat:
+  enabled: false
+
+notifications:
+  enabled: false
+
+server:
+  enabled: false
+
+groups:
+  - id: "test_group"
+    display_name: "Local Test"
+    provider: "mock"
+    poll_interval: 5s
+    post_plan_delay: 5s
+    plan_apply_with_unknown_status: true
+
+    mock:
+      servers:
+        - id: 1
+          name: "mock-server-1"
+          location: "fsn1"
+          network_zone: "eu-central"
+          resource_index: 0
+          public_ipv4: "10.0.0.1"
+        - id: 2
+          name: "mock-server-2"
+          location: "fsn1"
+          network_zone: "eu-central"
+          resource_index: 1
+          public_ipv4: "10.0.0.2"
+      floating_ips:
+        - id: 100
+          name: "test-fip"
+          location: "fsn1"
+          network_zone: "eu-central"
+          resource_index: 0
+          ip: "192.168.1.100"
+          current_target: 2  # server with id=2
+
+    checks:
+      - id: "health"
+        display_name: "Check"
+        type: "http"
+        interval: 2s
+        timeout: 1s
+        fall: 2
+        rise: 1
+        path: "/health"
+        port: 18081

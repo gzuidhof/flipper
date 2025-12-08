@@ -14,8 +14,8 @@ type FloatingIP struct {
 	// Provider is the name of the cloud provider that the floating IP is from.
 	Provider ProviderName
 
-	// HetznerID is the unique identifier of the floating IP in Hetzner.
-	HetznerID int64
+	// ProviderID is the unique identifier of the floating IP in the cloud provider.
+	ProviderID int64
 
 	// FloatingIPName is the name of the floating IP.
 	FloatingIPName string
@@ -50,7 +50,7 @@ type FloatingIP struct {
 
 // ID returns the unique identifier of the floating IP.
 func (f FloatingIP) ID() string {
-	return fmt.Sprint(f.HetznerID)
+	return fmt.Sprint(f.ProviderID)
 }
 
 // Name returns the name of the floating IP.
@@ -66,7 +66,7 @@ func (f FloatingIP) Equal(other Resource) bool {
 	}
 
 	return f.Provider == otherFloatingIP.Provider &&
-		f.HetznerID == otherFloatingIP.HetznerID &&
+		f.ProviderID == otherFloatingIP.ProviderID &&
 		f.FloatingIPName == otherFloatingIP.FloatingIPName &&
 		f.Location == otherFloatingIP.Location &&
 		f.NetworkZone == otherFloatingIP.NetworkZone &&

@@ -29,6 +29,9 @@ func hetznerIDToResourceID(hetznerID int64) string {
 
 // NewProvider creates a new Hetzner provider for a given group.
 func NewProvider(ctx context.Context, cfg cfgmodel.GroupConfig) (*Provider, error) {
+	if cfg.Hetzner == nil {
+		return nil, fmt.Errorf("hetzner config is required")
+	}
 	if cfg.Hetzner.APIToken == "" {
 		return nil, fmt.Errorf("hetzner API token is required")
 	}
@@ -98,7 +101,7 @@ func (c Provider) Poll(ctx context.Context) (resource.Group, error) {
 
 			floatingIPs = append(floatingIPs, resource.FloatingIP{
 				Provider:       c.Name(),
-				HetznerID:      flip.ID,
+				ProviderID:     flip.ID,
 				FloatingIPName: flip.Name,
 				Location:       flip.HomeLocation.Name,
 				NetworkZone:    string(flip.HomeLocation.NetworkZone),
@@ -128,7 +131,7 @@ func (c Provider) Poll(ctx context.Context) (resource.Group, error) {
 
 			servers = append(servers, resource.Server{
 				Provider:      c.Name(),
-				HetznerID:     srv.ID,
+				ServerID:      srv.ID,
 				ServerName:    srv.Name,
 				Location:      srv.Datacenter.Location.Name,
 				NetworkZone:   string(srv.Datacenter.Location.NetworkZone),
@@ -167,8 +170,8 @@ func (c Provider) AssignFloatingIP(ctx context.Context, flip resource.FloatingIP
 	}
 
 	// We create these fake objects to use the hcloud-go API without first fetching the objects.
-	hflip := &hcloud.FloatingIP{ID: flip.HetznerID}
-	hsrv := &hcloud.Server{ID: srv.HetznerID}
+	hflip := &hcloud.FloatingIP{ID: flip.ProviderID}
+	hsrv := &hcloud.Server{ID: srv.ServerID}
 
 	_, _, err := c.hc.FloatingIP.Assign(ctx, hflip, hsrv)
 	if err != nil {

@@ -2,8 +2,11 @@ package mock
 
 import (
 	"context"
+	"fmt"
+	"net/netip"
 	"time"
 
+	"github.com/gzuidhof/flipper/config/cfgmodel"
 	"github.com/gzuidhof/flipper/resource"
 )
 
@@ -27,6 +30,61 @@ func NewProvider() *Provider {
 		FloatingIPs: []resource.FloatingIP{},
 		Servers:     []resource.Server{},
 	}
+}
+
+// NewProviderFromConfig creates a new mock provider from config.
+func NewProviderFromConfig(cfg cfgmodel.MockProviderConfig) (*Provider, error) {
+	p := NewProvider()
+
+	for _, s := range cfg.Servers {
+		var ipv6 netip.Addr
+		if s.PublicIPv6 != "" {
+			var err error
+			ipv6, err = netip.ParseAddr(s.PublicIPv6)
+			if err != nil {
+				return nil, fmt.Errorf("invalid public_ipv6 %q for server %q: %w", s.PublicIPv6, s.Name, err)
+			}
+		} else {
+			ipv6 = netip.IPv6Unspecified()
+		}
+		ipv4, err := netip.ParseAddr(s.PublicIPv4)
+		if err != nil {
+			return nil, fmt.Errorf("invalid public_ipv4 %q for server %q: %w", s.PublicIPv4, s.Name, err)
+		}
+		p.Servers = append(p.Servers, resource.Server{
+			Provider:      resource.ProviderNameMock,
+			ServerID:      s.ID,
+			ServerName:    s.Name,
+			Location:      s.Location,
+			NetworkZone:   s.NetworkZone,
+			ResourceIndex: s.ResourceIndex,
+			PublicIPv4:    ipv4,
+			PublicIPv6:    ipv6,
+		})
+	}
+
+	for _, f := range cfg.FloatingIPs {
+		currentTarget := ""
+		if f.CurrentTarget != 0 {
+			currentTarget = fmt.Sprint(f.CurrentTarget)
+		}
+		ip, err := netip.ParseAddr(f.IP)
+		if err != nil {
+			return nil, fmt.Errorf("invalid ip %q for floating_ip %q: %w", f.IP, f.Name, err)
+		}
+		p.FloatingIPs = append(p.FloatingIPs, resource.FloatingIP{
+			Provider:       resource.ProviderNameMock,
+			ProviderID:     f.ID,
+			FloatingIPName: f.Name,
+			Location:       f.Location,
+			NetworkZone:    f.NetworkZone,
+			ResourceIndex:  f.ResourceIndex,
+			IP:             ip,
+			CurrentTarget:  currentTarget,
+		})
+	}
+
+	return p, nil
 }
 
 // Name returns the name of the mock provider, "mock".
