@@ -44,7 +44,7 @@ groups:
     # How often should we talk to Hetzner to look for changes w.r.t. the infra itself?
     poll_interval: 60s
 
-    # How long to wait after applying a plan before allowing another plan. Default is 1s. Set to 0 to disable.
+    # How long to wait after applying a plan before allowing another plan. Default is 0 (disabled).
     post_plan_delay: 1s
 
     hetzner:

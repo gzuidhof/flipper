@@ -32,7 +32,7 @@ type GroupConfig struct {
 
 	// PostPlanDelay is the time to wait after a plan is applied before allowing another plan.
 	// This is useful to prevent plans happening too quickly in succession.
-	// This defaults to 1 second.
+	// This defaults to 0 (disabled).
 	PostPlanDelay time.Duration `koanf:"post_plan_delay"`
 
 	// PlanApplyWithUnknownStatus is a flag that indicates that the group should apply plans
@@ -95,11 +95,8 @@ func (c GroupConfig) PlanApplyTimeoutOrDefault() time.Duration {
 	return c.PlanApplyTimeout
 }
 
-// PostPlanDelayOrDefault returns the post-plan delay or the default (1 second) if not set.
+// PostPlanDelayOrDefault returns the post-plan delay (default is 0, disabled).
 func (c GroupConfig) PostPlanDelayOrDefault() time.Duration {
-	if c.PostPlanDelay == 0 {
-		return time.Second
-	}
 	return c.PostPlanDelay
 }
 
