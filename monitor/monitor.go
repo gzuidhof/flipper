@@ -76,12 +76,11 @@ func (w *Monitor) Watch(ctx context.Context) error {
 	}
 	w.didStart = true
 
-	errgrp := errgroup.Group{}
-	errggrp, ctx := errgroup.WithContext(ctx)
+	errgrp, ctx := errgroup.WithContext(ctx)
 
 	for _, group := range w.groups {
 		group := group
-		errggrp.Go(func() error {
+		errgrp.Go(func() error {
 			return group.Start(ctx)
 		})
 	}
