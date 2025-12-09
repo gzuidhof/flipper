@@ -19,7 +19,7 @@ func TestMonitorWatch_BlocksUntilContextCancelled(t *testing.T) {
 	provider.Servers = append(provider.Servers, resource.Server{
 		Provider:   resource.ProviderNameMock,
 		ServerName: "mock-server",
-		ServerID:   1,
+		MockID:     1,
 	})
 
 	cfg := cfgmodel.GroupConfig{

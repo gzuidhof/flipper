@@ -22,7 +22,7 @@ func TestResourcesWatcher(t *testing.T) {
 	provider.Servers = append(provider.Servers, resource.Server{
 		Provider:   resource.ProviderNameMock,
 		ServerName: "mock-server-1",
-		ServerID:   1,
+		MockID:     1,
 	})
 
 	watcher := NewResourcesWatcher(cfg, slog.Default(), provider)
@@ -47,7 +47,7 @@ func TestResourcesWatcher(t *testing.T) {
 	provider.Servers = append(provider.Servers, resource.Server{
 		Provider:   resource.ProviderNameMock,
 		ServerName: "mock-server-2",
-		ServerID:   2,
+		MockID:     2,
 	})
 
 	r, cs, err = watcher.Update(ctx)

@@ -53,7 +53,7 @@ func NewProviderFromConfig(cfg cfgmodel.MockProviderConfig) (*Provider, error) {
 		}
 		p.Servers = append(p.Servers, resource.Server{
 			Provider:      resource.ProviderNameMock,
-			ServerID:      s.ID,
+			MockID:        s.ID,
 			ServerName:    s.Name,
 			Location:      s.Location,
 			NetworkZone:   s.NetworkZone,
@@ -74,7 +74,7 @@ func NewProviderFromConfig(cfg cfgmodel.MockProviderConfig) (*Provider, error) {
 		}
 		p.FloatingIPs = append(p.FloatingIPs, resource.FloatingIP{
 			Provider:       resource.ProviderNameMock,
-			ProviderID:     f.ID,
+			MockID:         f.ID,
 			FloatingIPName: f.Name,
 			Location:       f.Location,
 			NetworkZone:    f.NetworkZone,

@@ -14,8 +14,13 @@ type Server struct {
 	// Provider is name of the cloud provider where the server is located.
 	Provider ProviderName
 
-	// ServerID is the unique ID of the server in the cloud provider.
-	ServerID int64
+	// HetznerID is the unique ID of the server in Hetzner.
+	// Only set when Provider is ProviderNameHetzner.
+	HetznerID int64
+
+	// MockID is the unique ID of the server in the mock provider.
+	// Only set when Provider is ProviderNameMock.
+	MockID int64
 
 	// ServerName is the name of the server.
 	ServerName string
@@ -50,7 +55,14 @@ type Server struct {
 
 // ID returns the unique identifier of the server.
 func (s Server) ID() string {
-	return fmt.Sprint(s.ServerID)
+	switch s.Provider {
+	case ProviderNameHetzner:
+		return fmt.Sprint(s.HetznerID)
+	case ProviderNameMock:
+		return fmt.Sprint(s.MockID)
+	default:
+		panic(fmt.Sprintf("unknown provider: %s", s.Provider))
+	}
 }
 
 // Name returns the name of the server.
@@ -66,7 +78,7 @@ func (s Server) Equal(other Resource) bool {
 	}
 
 	return s.Provider == otherServer.Provider &&
-		s.ServerID == otherServer.ServerID &&
+		s.ID() == otherServer.ID() &&
 		s.ServerName == otherServer.ServerName &&
 		s.Location == otherServer.Location &&
 		s.NetworkZone == otherServer.NetworkZone &&
