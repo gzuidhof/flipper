@@ -1,6 +1,7 @@
 package plan
 
 import (
+	"cmp"
 	"log/slog"
 	"slices"
 	"strings"
@@ -96,7 +97,7 @@ func (s State) CandidateFloatingIPs() []resource.FloatingIP {
 		// We do not touch floating IPs that are pointed to a server that is unknown to this tool.
 		if _, ok := s.Servers[f.CurrentTarget]; !ok && f.CurrentTarget != "" {
 			slog.Warn("floating IP points to unknown server",
-				"floating_ip_id", f.HetznerID,
+				"floating_ip_id", f.ID(),
 				"server_id", f.CurrentTarget,
 			)
 			continue
@@ -105,10 +106,10 @@ func (s State) CandidateFloatingIPs() []resource.FloatingIP {
 		flips = append(flips, f)
 	}
 
-	// Sort todo to make the plan deterministic.
+	// Sort to make the plan deterministic.
 	// The exact order doesn't matter, as long as it's deterministic. For the tests to be simple we sort by ID.
 	slices.SortFunc(flips, func(i, j resource.FloatingIP) int {
-		return int(i.HetznerID - j.HetznerID)
+		return cmp.Compare(i.ID(), j.ID())
 	})
 
 	return flips

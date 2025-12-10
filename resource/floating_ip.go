@@ -15,7 +15,12 @@ type FloatingIP struct {
 	Provider ProviderName
 
 	// HetznerID is the unique identifier of the floating IP in Hetzner.
+	// Only set when Provider is ProviderNameHetzner.
 	HetznerID int64
+
+	// MockID is the unique identifier of the floating IP in the mock provider.
+	// Only set when Provider is ProviderNameMock.
+	MockID int64
 
 	// FloatingIPName is the name of the floating IP.
 	FloatingIPName string
@@ -50,7 +55,14 @@ type FloatingIP struct {
 
 // ID returns the unique identifier of the floating IP.
 func (f FloatingIP) ID() string {
-	return fmt.Sprint(f.HetznerID)
+	switch f.Provider {
+	case ProviderNameHetzner:
+		return fmt.Sprint(f.HetznerID)
+	case ProviderNameMock:
+		return fmt.Sprint(f.MockID)
+	default:
+		panic(fmt.Sprintf("unknown provider: %s", f.Provider))
+	}
 }
 
 // Name returns the name of the floating IP.
@@ -66,7 +78,7 @@ func (f FloatingIP) Equal(other Resource) bool {
 	}
 
 	return f.Provider == otherFloatingIP.Provider &&
-		f.HetznerID == otherFloatingIP.HetznerID &&
+		f.ID() == otherFloatingIP.ID() &&
 		f.FloatingIPName == otherFloatingIP.FloatingIPName &&
 		f.Location == otherFloatingIP.Location &&
 		f.NetworkZone == otherFloatingIP.NetworkZone &&

@@ -29,6 +29,9 @@ func hetznerIDToResourceID(hetznerID int64) string {
 
 // NewProvider creates a new Hetzner provider for a given group.
 func NewProvider(ctx context.Context, cfg cfgmodel.GroupConfig) (*Provider, error) {
+	if cfg.Hetzner == nil {
+		return nil, fmt.Errorf("hetzner config is required")
+	}
 	if cfg.Hetzner.APIToken == "" {
 		return nil, fmt.Errorf("hetzner API token is required")
 	}

@@ -40,12 +40,16 @@ type GroupConfig struct {
 	PlanApplyWithUnkownStatus bool `koanf:"plan_apply_with_unknown_status"`
 
 	// Provider is the name of the cloud provider that the group is using.
-	// Currently only "hetzner" is supported.
+	// Supported values: "hetzner", "mock".
 	Provider string `koanf:"provider"`
 
 	// Hetzner is the Hetzner-specific configuration.
-	// This is only used if the provider is "hetzner".
-	Hetzner HetznerProviderConfig `koanf:"hetzner"`
+	// nil when using a different provider.
+	Hetzner *HetznerProviderConfig `koanf:"hetzner"`
+
+	// Mock is the mock provider configuration.
+	// nil when using a different provider.
+	Mock *MockProviderConfig `koanf:"mock"`
 
 	// Checks is a list of health checks to perform on the servers.
 	Checks []HealthCheckConfig `koanf:"checks"`
@@ -65,8 +69,9 @@ func (c GroupConfig) Validate() error {
 	return validation.ValidateStruct(&c,
 		validation.Field(&c.ID, validation.Required),
 		validation.Field(&c.DisplayName, validation.Required),
-		validation.Field(&c.Provider, validation.Required, validation.In("hetzner")),
+		validation.Field(&c.Provider, validation.Required, validation.In("hetzner", "mock")),
 		validation.Field(&c.Hetzner, validation.When(c.Provider == "hetzner", validation.Required)),
+		validation.Field(&c.Mock, validation.When(c.Provider == "mock", validation.Required)),
 		validation.Field(&c.Checks),
 	)
 }
